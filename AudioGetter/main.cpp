@@ -212,7 +212,7 @@ int main(int argc, const char * argv[]) {
         // Inform the user that your app requires accessibility permissions to function correctly
         std::cerr <<  "Please enable audio permissions for this app.";
     }
-    AudioDeviceID outputDevice = getBlackHoleDevice();
+    AudioDeviceID outputDevice = getDefaultOutputDevice();
     if (outputDevice != kAudioObjectUnknown) {
         std::cout << "Successfully obtained device.\n";
     } else {
