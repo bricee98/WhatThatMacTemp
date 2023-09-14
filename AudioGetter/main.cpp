@@ -46,49 +46,6 @@ AudioStreamBasicDescription globalStreamFormat; // define global variable here
 OSStatus currStatus;
 UInt32 dataSize = sizeof(currStatus);
 
-void listAudioDevices() {
-    AudioObjectPropertyAddress propertyAddress = {
-        kAudioHardwarePropertyDevices,
-        kAudioObjectPropertyScopeGlobal,
-        kAudioObjectPropertyElementWildcard
-    };
-
-    UInt32 dataSize = 0;
-    OSStatus status = AudioObjectGetPropertyDataSize(kAudioObjectSystemObject, &propertyAddress, 0, nullptr, &dataSize);
-    if (status != kAudioHardwareNoError) {
-        std::cerr << "Error getting audio device list size: " << status << std::endl;
-        return;
-    }
-
-    UInt32 deviceCount = dataSize / sizeof(AudioDeviceID);
-    AudioDeviceID *audioDevices = new AudioDeviceID[deviceCount];
-    status = AudioObjectGetPropertyData(kAudioObjectSystemObject, &propertyAddress, 0, nullptr, &dataSize, audioDevices);
-    if (status != kAudioHardwareNoError) {
-        std::cerr << "Error getting audio device list: " << status << std::endl;
-        delete[] audioDevices;
-        return;
-    }
-
-    for (UInt32 i = 0; i < deviceCount; ++i) {
-        CFStringRef deviceName = NULL;
-        propertyAddress.mSelector = kAudioDevicePropertyDeviceNameCFString;
-        status = AudioObjectGetPropertyData(audioDevices[i], &propertyAddress, 0, nullptr, &dataSize, &deviceName);
-        if (status == kAudioHardwareNoError) {
-            const char* deviceNameCStr = CFStringGetCStringPtr(deviceName, kCFStringEncodingMacRoman);
-            if (deviceNameCStr) {
-                std::cout << "Device " << i << ": " << deviceNameCStr << std::endl;
-            } else {
-                std::cerr << "Error converting device name to C string" << std::endl;
-            }
-            CFRelease(deviceName);
-        } else {
-            std::cerr << "Error getting device name: " << status << std::endl;
-        }
-    }
-
-
-    delete[] audioDevices;
-}
 AudioDeviceID getDefaultOutputDevice() {
     AudioDeviceID outputDeviceID = kAudioObjectUnknown;
 
@@ -255,12 +212,48 @@ int main(int argc, const char * argv[]) {
         // Inform the user that your app requires accessibility permissions to function correctly
         std::cerr <<  "Please enable audio permissions for this app.";
     }
-    AudioDeviceID outputDevice = getDefaultOutputDevice();
+    AudioDeviceID outputDevice = getBlackHoleDevice();
     if (outputDevice != kAudioObjectUnknown) {
         std::cout << "Successfully obtained device.\n";
     } else {
         std::cout << "Failed to obtain device.\n";
     }
+    
+    AudioStreamBasicDescription deviceStreamFormat;
+    AudioObjectPropertyAddress propertyAddress = {
+        kAudioDevicePropertyStreamFormat,
+        kAudioDevicePropertyScopeOutput,
+        kAudioObjectPropertyElementMaster
+    };
+
+
+    UInt32 propertySize = sizeof(AudioStreamBasicDescription);
+    OSStatus status = AudioObjectGetPropertyData(outputDevice, &propertyAddress, 0, NULL, &propertySize, &deviceStreamFormat);
+    if (status != noErr) {
+        std::cerr << "Error getting device stream format: " << status << "\n";
+        return -1;
+    }
+
+    bool isMatch = (deviceStreamFormat.mSampleRate == globalStreamFormat.mSampleRate) &&
+                   (deviceStreamFormat.mFormatID == globalStreamFormat.mFormatID) &&
+                   (deviceStreamFormat.mFormatFlags == globalStreamFormat.mFormatFlags) &&
+                   (deviceStreamFormat.mBytesPerPacket == globalStreamFormat.mBytesPerPacket) &&
+                   (deviceStreamFormat.mFramesPerPacket == globalStreamFormat.mFramesPerPacket) &&
+                   (deviceStreamFormat.mBytesPerFrame == globalStreamFormat.mBytesPerFrame) &&
+                   (deviceStreamFormat.mChannelsPerFrame == globalStreamFormat.mChannelsPerFrame) &&
+                   (deviceStreamFormat.mBitsPerChannel == globalStreamFormat.mBitsPerChannel) &&
+                   (deviceStreamFormat.mReserved == globalStreamFormat.mReserved);
+
+    if (isMatch) {
+        std::cout << "The stream formats match.\n";
+    } else {
+        std::cout << "The stream formats do not match.\n";
+    }
+
+
+
+    // Now deviceStreamFormat holds the current stream format of the device
+
     
     AudioComponentDescription desc = {0};
     desc.componentType = kAudioUnitType_Output;
@@ -275,7 +268,7 @@ int main(int argc, const char * argv[]) {
     }
 
     AudioUnit audioUnit;
-    OSStatus status = AudioComponentInstanceNew(component, &audioUnit);
+    status = AudioComponentInstanceNew(component, &audioUnit);
     if (status != noErr) {
         std::cerr << "Error creating audio unit: " << status << "\n";
         return -1;
