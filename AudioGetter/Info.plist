@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>WhatThat needs access to the microphone to capture the system output device audio.</string>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>WhatThat needs input monitoring permissions to detect global hotkey events so it can display translations and transcriptions to English when the hotkey is pressed.</string>
+</dict>
+</plist>

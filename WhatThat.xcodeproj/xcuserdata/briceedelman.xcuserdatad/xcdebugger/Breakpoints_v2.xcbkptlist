@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "33FC1EB5-F167-4274-8AC9-348398B33E6A"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C63DA3DE-53CD-40B3-8A91-D61F40991BDF"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "AudioGetter/main.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "183"
+            endingLineNumber = "183"
+            landmarkName = "MyAURenderCallback(inRefCon, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData)"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  uuid = "C63DA3DE-53CD-40B3-8A91-D61F40991BDF - 335e580d4acea45c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MyAURenderCallback(void*, unsigned int*, AudioTimeStamp const*, unsigned int, unsigned int, AudioBufferList*)"
+                  moduleName = "WhatThat"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/briceedelman/Desktop/AudioGetter/AudioGetter/main.cpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "187"
+                  endingLineNumber = "187"
+                  offsetFromSymbolStart = "255">
+               </Location>
+               <Location
+                  uuid = "C63DA3DE-53CD-40B3-8A91-D61F40991BDF - 335e580d4acea45c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MyAURenderCallback(void*, unsigned int*, AudioTimeStamp const*, unsigned int, unsigned int, AudioBufferList*)"
+                  moduleName = "WhatThat"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/briceedelman/Desktop/AudioGetter/AudioGetter/main.cpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "187"
+                  endingLineNumber = "187"
+                  offsetFromSymbolStart = "264">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
